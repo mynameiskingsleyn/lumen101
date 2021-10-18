@@ -23,8 +23,11 @@ $router->group(['prefix'=>'api'], function () use ($router) {
     $router->post('/login', 'AuthController@login');
     $router->post('/register', 'AuthController@register');
 
-    $router->get('/posts', ['as'=>'posts','uses'=>'PostController@index']);
-    $router->post('/create_post', ['as'=>'createPost','uses'=>'PostController@store']);
-    $router->put('/post/{id}', ['as'=>'updatePost','uses'=>'PostController@update']);
-    $router->delete('/post/{id}', ['as'=>'destroyPost','uses'=>'PostController@destroy']);
+    $router->group(['middleware'=>'auth'], function () use ($router) {
+        $router->post('/logout', ['as'=>'logout', 'uses'=>'AuthController@logout']);
+        $router->get('/posts', ['as'=>'posts','uses'=>'PostController@index']);
+        $router->post('/create_post', ['as'=>'createPost','uses'=>'PostController@store']);
+        $router->put('/post/{id}', ['as'=>'updatePost','uses'=>'PostController@update']);
+        $router->delete('/post/{id}', ['as'=>'destroyPost','uses'=>'PostController@destroy']);
+    });
 });
